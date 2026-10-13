@@ -36,18 +36,22 @@ test("root redirects to the supplied visualization", async () => {
   assert.equal(response.headers.get("location"), "/miniapp-card-preview-v2.html");
 });
 
-test("keeps the supplied HTML byte-identical and sandboxed", async () => {
+test("keeps the visualization sandboxed after the design update", async () => {
   const html = await readFile(previewPath);
   const sha256 = createHash("sha256").update(html).digest("hex");
 
   assert.equal(
     sha256,
-    "7ddd54fc4194e1bd3c4c1470888b06f7eb3c29c4976c1550fb6abdc07b5b7b3b",
+    "3593b9064e41478f9f2857075ce9a8e401a9e3e9b69b32f7269aa5c9bf7d4f18",
   );
 
   const source = html.toString("utf8");
   assert.match(source, /Content-Security-Policy/i);
   assert.match(source, /<iframe\b[^>]*\bsandbox=/i);
+  assert.match(source, /--premium-blue: light-dark\(#595ff2, #595ff2\)/);
+  assert.match(source, /--premium-purple: light-dark\(#7b55ea, #7b55ea\)/);
+  assert.match(source, /linear-gradient\(112deg, #5b68ed 0%, #7753dd 58%, #a660d1 100%\)/);
+  assert.match(source, /与你同频的鉴定偏好/);
 });
 
 test("tracks the Sites project and production route", async () => {
