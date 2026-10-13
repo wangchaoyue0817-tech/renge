@@ -1118,7 +1118,24 @@ html&gt;body{padding:0}&lt;/style&gt;
 
       &lt;section class=&quot;premium-social&quot;&gt;
         &lt;div class=&quot;premium-social-head&quot;&gt;
-          &lt;span class=&quot;premium-orbit&quot;&gt;&lt;i data-lucide=&quot;orbit&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/span&gt;
+          &lt;span class=&quot;premium-orbit&quot; aria-hidden=&quot;true&quot;&gt;
+            &lt;svg class=&quot;premium-sync-glyph&quot; viewBox=&quot;0 0 40 40&quot; fill=&quot;none&quot;&gt;
+              &lt;defs&gt;
+                &lt;linearGradient id=&quot;premium-sync-gradient&quot; x1=&quot;8&quot; y1=&quot;8&quot; x2=&quot;32&quot; y2=&quot;32&quot; gradientUnits=&quot;userSpaceOnUse&quot;&gt;
+                  &lt;stop stop-color=&quot;#6DDFFF&quot;/&gt;
+                  &lt;stop offset=&quot;.48&quot; stop-color=&quot;#A4AEFF&quot;/&gt;
+                  &lt;stop offset=&quot;1&quot; stop-color=&quot;#8A62F0&quot;/&gt;
+                &lt;/linearGradient&gt;
+              &lt;/defs&gt;
+              &lt;path class=&quot;premium-sync-ring&quot; d=&quot;M9.8 23.7C8.4 16.5 13 9.7 20.1 8.5c4.3-.8 8.5.8 11.2 3.8&quot;/&gt;
+              &lt;path class=&quot;premium-sync-ring premium-sync-ring-soft&quot; d=&quot;M30.6 16.2c2.1 6.9-1.9 14.2-8.8 16.1-4.1 1.1-8.5.1-11.4-2.8&quot;/&gt;
+              &lt;path class=&quot;premium-sync-wave&quot; d=&quot;M12.4 27.6c3.1-1.5 5.2-4.7 7.6-7.6 2.1-2.6 4.4-5 7.7-6.7&quot;/&gt;
+              &lt;circle class=&quot;premium-sync-core&quot; cx=&quot;20&quot; cy=&quot;20&quot; r=&quot;3.25&quot;/&gt;
+              &lt;circle class=&quot;premium-sync-node&quot; cx=&quot;9.8&quot; cy=&quot;23.7&quot; r=&quot;1.55&quot;/&gt;
+              &lt;circle class=&quot;premium-sync-node premium-sync-node-purple&quot; cx=&quot;30.6&quot; cy=&quot;16.2&quot; r=&quot;1.55&quot;/&gt;
+              &lt;circle class=&quot;premium-sync-node premium-sync-node-gold&quot; cx=&quot;12.4&quot; cy=&quot;27.6&quot; r=&quot;1.35&quot;/&gt;
+            &lt;/svg&gt;
+          &lt;/span&gt;
           &lt;div&gt;&lt;small class=&quot;premium-social-kicker&quot;&gt;PERSONALITY MATCH&lt;/small&gt;&lt;strong&gt;同频鉴定趋势&lt;/strong&gt;&lt;i class=&quot;premium-title-accent&quot;&gt;&lt;/i&gt;&lt;small class=&quot;premium-social-subtitle&quot;&gt;与你同频的鉴定偏好&lt;/small&gt;&lt;/div&gt;
         &lt;/div&gt;
 
@@ -1227,8 +1244,16 @@ html&gt;body{padding:0}&lt;/style&gt;
 .premium-social { position: relative; min-height: 235px; padding: 15px; overflow: hidden; border: 1px solid var(--premium-hairline); border-radius: 20px; background: radial-gradient(circle at 88% -6%, color-mix(in srgb, var(--premium-blue) 20%, transparent), transparent 37%), radial-gradient(circle at -5% 105%, color-mix(in srgb, var(--premium-purple) 13%, transparent), transparent 32%), linear-gradient(155deg, #1a1d46, #101532 74%); box-shadow: 0 16px 38px rgba(8, 12, 38, .34), inset 0 1px 0 rgba(241, 240, 255, .065); }
 .premium-social::before { content: &quot;&quot;; position: absolute; inset: 0 44% auto 15px; height: 1px; background: linear-gradient(90deg, var(--premium-cyan), var(--premium-purple), transparent); opacity: .72; }
 .premium-social-head { position: relative; display: flex; align-items: center; }
-.premium-orbit { position: relative; width: 42px; height: 42px; display: grid; place-items: center; overflow: hidden; border: 1px solid color-mix(in srgb, var(--premium-cyan) 24%, transparent); border-radius: 14px; color: #d8d7ff; background: linear-gradient(145deg, color-mix(in srgb, var(--premium-blue) 24%, transparent), color-mix(in srgb, var(--premium-purple) 12%, var(--premium-surface))); box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 8px 22px color-mix(in srgb, var(--premium-blue) 14%, transparent); }
-.premium-orbit::after { content: &quot;&quot;; position: absolute; width: 4px; height: 4px; top: 8px; right: 8px; border-radius: 50%; background: var(--premium-cyan); box-shadow: 0 0 10px color-mix(in srgb, var(--premium-cyan) 65%, transparent); }
+.premium-orbit { position: relative; width: 44px; height: 44px; display: grid; flex: 0 0 auto; place-items: center; overflow: hidden; border: 1px solid rgba(166, 188, 227, .18); border-radius: 15px; background: radial-gradient(circle at 32% 24%, rgba(109, 223, 255, .13), transparent 42%), linear-gradient(145deg, rgba(89, 95, 242, .18), rgba(123, 85, 234, .08)); box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 10px 24px rgba(89,95,242,.13); }
+.premium-orbit::before { content: &quot;&quot;; position: absolute; inset: 5px; border: 1px solid rgba(184,169,255,.09); border-radius: 11px; pointer-events: none; }
+.premium-sync-glyph { position: relative; z-index: 1; width: 30px; height: 30px; overflow: visible; filter: drop-shadow(0 0 7px rgba(109,223,255,.14)); }
+.premium-sync-ring, .premium-sync-wave { fill: none; stroke: url(#premium-sync-gradient); stroke-width: 1.55; stroke-linecap: round; stroke-linejoin: round; }
+.premium-sync-ring-soft { opacity: .66; }
+.premium-sync-wave { stroke-width: 1.35; opacity: .48; }
+.premium-sync-core { fill: #13183a; stroke: #c5c8ff; stroke-width: 1.45; }
+.premium-sync-node { fill: var(--premium-cyan); stroke: #17204a; stroke-width: .8; }
+.premium-sync-node-purple { fill: #a98bff; }
+.premium-sync-node-gold { fill: var(--premium-yellow); }
 .premium-social-head &gt; div { min-width: 0; margin-left: 11px; display: grid; }
 .premium-social-head &gt; div strong { order: 2; margin-top: 1px; color: var(--premium-text); font-size: 18px; font-weight: 600; line-height: 1.35; letter-spacing: .01em; }
 .premium-social-kicker { order: 1; color: color-mix(in srgb, var(--premium-cyan) 68%, var(--premium-muted)) !important; font-size: 9px; font-weight: 600; letter-spacing: .15em !important; }
@@ -1243,7 +1268,9 @@ html&gt;body{padding:0}&lt;/style&gt;
 .premium-social-body .premium-archetype-desc { margin: 6px 0 0; overflow: hidden; color: var(--premium-muted); font-size: 12px; line-height: 1.55; white-space: nowrap; text-overflow: ellipsis; }
 .premium-hot-strip { min-height: 62px; padding: 8px 8px 8px 9px; display: flex; align-items: center; border: 1px solid rgba(166, 188, 227, .14); border-radius: 15px; background: linear-gradient(100deg, rgba(89, 95, 242, .09), rgba(21, 22, 39, .78) 48%, rgba(123, 85, 234, .08)); box-shadow: inset 0 1px 0 rgba(255,255,255,.035); transition: opacity .22s ease, transform .22s ease; }
 .premium-hot-strip.changing { opacity: 0; transform: translateY(7px); }
-.premium-hot-icon { flex: 0 0 auto; width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid color-mix(in srgb, var(--premium-cyan) 22%, transparent); border-radius: 12px; color: #c9d5ff; background: linear-gradient(145deg, color-mix(in srgb, var(--premium-blue) 18%, transparent), color-mix(in srgb, var(--premium-purple) 10%, transparent)); }
+.premium-hot-icon { position: relative; flex: 0 0 auto; width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid rgba(166,188,227,.17); border-radius: 12px; color: #ced7ff; background: radial-gradient(circle at 34% 28%, rgba(109,223,255,.1), transparent 44%), linear-gradient(145deg, rgba(89,95,242,.16), rgba(123,85,234,.08)); box-shadow: inset 0 1px 0 rgba(255,255,255,.055); }
+.premium-hot-icon::before { content: &quot;&quot;; position: absolute; inset: 6px; border: 1px solid rgba(184,169,255,.1); border-radius: 8px; }
+.premium-hot-icon svg { position: relative; z-index: 1; width: 17px; height: 17px; stroke-width: 1.65; filter: drop-shadow(0 0 6px rgba(109,223,255,.12)); }
 .premium-hot-copy { min-width: 0; margin-left: 9px; display: grid; gap: 2px; }
 .premium-hot-copy strong, .premium-hot-copy small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .premium-hot-copy strong { color: var(--premium-text); font-size: 13px; font-weight: 600; }
