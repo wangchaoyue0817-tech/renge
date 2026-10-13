@@ -42,7 +42,7 @@ test("keeps the visualization sandboxed after the design update", async () => {
 
   assert.equal(
     sha256,
-    "3593b9064e41478f9f2857075ce9a8e401a9e3e9b69b32f7269aa5c9bf7d4f18",
+    "565d7312f8c59e78c763868d975aa740320e7fb1491065a66bf682186ed595bb",
   );
 
   const source = html.toString("utf8");
@@ -50,8 +50,11 @@ test("keeps the visualization sandboxed after the design update", async () => {
   assert.match(source, /<iframe\b[^>]*\bsandbox=/i);
   assert.match(source, /--premium-blue: light-dark\(#595ff2, #595ff2\)/);
   assert.match(source, /--premium-purple: light-dark\(#7b55ea, #7b55ea\)/);
+  assert.match(source, /--premium-bg-deep: light-dark\(#0b1028, #0b1028\)/);
   assert.match(source, /linear-gradient\(112deg, #5b68ed 0%, #7753dd 58%, #a660d1 100%\)/);
   assert.match(source, /与你同频的鉴定偏好/);
+  assert.doesNotMatch(source, /#(?:000|000000)\b|rgba?\(0,\s*0,\s*0/i);
+  assert.doesNotMatch(source, /#050810|rgba\(5,\s*8,\s*16/i);
 });
 
 test("tracks the Sites project and production route", async () => {
