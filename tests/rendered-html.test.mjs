@@ -42,7 +42,7 @@ test("keeps the visualization sandboxed after the design update", async () => {
 
   assert.equal(
     sha256,
-    "5bac27d2504b906932780c71b01b208a1e82ddeaff6fd7e6c013923e864cb214",
+    "ce8e11a6d0b20424743e8b32b88041f1daa3b4fa3dce35b8fee5fb21e4572e42",
   );
 
   const source = html.toString("utf8");
@@ -56,7 +56,10 @@ test("keeps the visualization sandboxed after the design update", async () => {
   assert.match(source, /id=&quot;premium-sync-gradient&quot;/);
   assert.match(source, /\.premium-hot-icon svg \{[^}]*stroke-width: 1\.65/);
   assert.doesNotMatch(source, /data-lucide=&quot;orbit&quot;/);
-  assert.match(source, /与你同频的鉴定偏好/);
+  assert.doesNotMatch(source, /PERSONALITY MATCH|与你同频的鉴定偏好/);
+  assert.match(source, /\.premium-social \{[^}]*min-height: 205px;[^}]*padding: 13px;/);
+  assert.match(source, /\.premium-social-body \{[^}]*min-height: 68px;[^}]*margin: 8px 0 7px;/);
+  assert.match(source, /\.premium-hot-strip \{[^}]*min-height: 56px;[^}]*padding: 7px 8px;/);
   assert.doesNotMatch(source, /#(?:000|000000)\b|rgba?\(0,\s*0,\s*0/i);
   assert.doesNotMatch(source, /#050810|rgba\(5,\s*8,\s*16/i);
 });
