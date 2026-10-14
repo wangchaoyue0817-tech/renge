@@ -42,7 +42,7 @@ test("keeps the visualization sandboxed after the design update", async () => {
 
   assert.equal(
     sha256,
-    "ce8e11a6d0b20424743e8b32b88041f1daa3b4fa3dce35b8fee5fb21e4572e42",
+    "8bc8586928037f9a850272b8a30f4a8075f56c4b746a94dea3f19756c957b41f",
   );
 
   const source = html.toString("utf8");
@@ -60,8 +60,43 @@ test("keeps the visualization sandboxed after the design update", async () => {
   assert.match(source, /\.premium-social \{[^}]*min-height: 205px;[^}]*padding: 13px;/);
   assert.match(source, /\.premium-social-body \{[^}]*min-height: 68px;[^}]*margin: 8px 0 7px;/);
   assert.match(source, /\.premium-hot-strip \{[^}]*min-height: 56px;[^}]*padding: 7px 8px;/);
+  assert.match(source, /\.premium-benefit, \.premium-atlas, \.premium-social \{ width: 100%; \}/);
+  assert.match(source, /\.premium-content \{[^}]*overflow-y: auto;/);
   assert.doesNotMatch(source, /#(?:000|000000)\b|rgba?\(0,\s*0,\s*0/i);
   assert.doesNotMatch(source, /#050810|rgba\(5,\s*8,\s*16/i);
+});
+
+test("places the interactive achievement atlas above the trend card", async () => {
+  const source = await readFile(previewPath, "utf8");
+  const atlasIndex = source.indexOf("class=&quot;premium-atlas&quot;");
+  const trendIndex = source.indexOf("class=&quot;premium-social&quot;");
+
+  assert.ok(atlasIndex > 0);
+  assert.ok(trendIndex > atlasIndex);
+  assert.match(source, /达人图鉴/);
+  assert.match(source, /点亮品类，专家鉴别券免费领/);
+  assert.match(source, /id=&quot;premium-atlas-gallery&quot;[^>]*hidden/);
+  assert.match(source, /openSheet\('atlas'\)/);
+  assert.match(source, /选择下一个点亮品类/);
+
+  const badgeNames = [
+    "bag",
+    "beauty",
+    "clothes",
+    "coin",
+    "food",
+    "jade",
+    "persona",
+    "porcelain",
+    "shoes",
+    "watch",
+    "wine",
+  ];
+  await Promise.all(
+    badgeNames.map((name) =>
+      readFile(new URL(`../public/assets/achievement/${name}.png`, import.meta.url)),
+    ),
+  );
 });
 
 test("tracks the Sites project and production route", async () => {
