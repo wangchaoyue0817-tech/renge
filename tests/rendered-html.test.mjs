@@ -42,7 +42,7 @@ test("keeps the visualization sandboxed after the design update", async () => {
 
   assert.equal(
     sha256,
-    "8bc8586928037f9a850272b8a30f4a8075f56c4b746a94dea3f19756c957b41f",
+    "a506d2afdadcf8453f4cd5b864b33ff4e8fc7f936c7e696a73a3d4137b68f77d",
   );
 
   const source = html.toString("utf8");
@@ -60,8 +60,10 @@ test("keeps the visualization sandboxed after the design update", async () => {
   assert.match(source, /\.premium-social \{[^}]*min-height: 205px;[^}]*padding: 13px;/);
   assert.match(source, /\.premium-social-body \{[^}]*min-height: 68px;[^}]*margin: 8px 0 7px;/);
   assert.match(source, /\.premium-hot-strip \{[^}]*min-height: 56px;[^}]*padding: 7px 8px;/);
-  assert.match(source, /\.premium-benefit, \.premium-atlas, \.premium-social \{ width: 100%; \}/);
+  assert.match(source, /\.premium-atlas, \.premium-social \{ width: 100%; \}/);
   assert.match(source, /\.premium-content \{[^}]*overflow-y: auto;/);
+  assert.doesNotMatch(source, /新人首鉴福利|NEWCOMER GIFT|30元专鉴券/);
+  assert.doesNotMatch(source, /class=&quot;premium-benefit&quot;|id=&quot;premium-open-sheet&quot;/);
   assert.doesNotMatch(source, /#(?:000|000000)\b|rgba?\(0,\s*0,\s*0/i);
   assert.doesNotMatch(source, /#050810|rgba\(5,\s*8,\s*16/i);
 });
@@ -76,7 +78,7 @@ test("places the interactive achievement atlas above the trend card", async () =
   assert.match(source, /达人图鉴/);
   assert.match(source, /点亮品类，专家鉴别券免费领/);
   assert.match(source, /id=&quot;premium-atlas-gallery&quot;[^>]*hidden/);
-  assert.match(source, /openSheet\('atlas'\)/);
+  assert.match(source, /#premium-atlas-light'\)\.addEventListener\('click', openSheet\)/);
   assert.match(source, /选择下一个点亮品类/);
 
   const badgeNames = [
