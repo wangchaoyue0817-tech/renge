@@ -76,6 +76,7 @@ test("places the interactive achievement atlas above the trend card", async () =
   assert.match(source, /id=&quot;premium-atlas-expand&quot;[^>]*aria-controls=&quot;premium-atlas-gallery&quot;/);
   assert.match(source, /aria-label=&quot;领取5类里程碑奖励&quot;/);
   assert.match(source, /aria-label=&quot;集齐11类，解锁2张专家鉴别券&quot;/);
+  assert.match(source, /id=&quot;premium-atlas-next&quot;&gt;再点亮2类&lt;\/span&gt;/);
   assert.match(source, /选择下一个点亮品类/);
 
   const badgeNames = [
@@ -111,7 +112,7 @@ test("claiming the five-category reward updates visible and accessible state onl
   ]);
   const status = { textContent: "待领取" };
   const progressAttributes = new Map();
-  const nextReward = { textContent: "首券待领取" };
+  const nextReward = { textContent: "再点亮2类" };
   const messages = [];
   const button = {
     getAttribute: (name) => attributes.get(name),
@@ -143,11 +144,37 @@ test("claiming the five-category reward updates visible and accessible state onl
     progressAttributes.get("aria-label"),
     "已点亮6类；5类奖励已领取；11类可领取2张专家鉴别券",
   );
-  assert.equal(nextReward.textContent, "距双券 5 类");
+  assert.equal(nextReward.textContent, "再点亮2类");
   assert.deepEqual(messages, ["专家鉴别券 ×1 已领取"]);
 
   claim({ currentTarget: button });
   assert.equal(messages.length, 1, "a claimed reward must not be granted again");
+});
+
+test("uses simple milestone labels with dots centered on a thicker progress track", async () => {
+  const source = await readFile(previewPath, "utf8");
+  const cssRule = (selector) => {
+    const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const rule = source.match(new RegExp(`${escapedSelector} \\{([^}]+)\\}`));
+    assert.ok(rule, `missing CSS rule for ${selector}`);
+    return rule[1];
+  };
+  const pixels = (rule, property) => {
+    const declaration = rule.match(new RegExp(`(?:^|;)\\s*${property}:\\s*(\\d+(?:\\.\\d+)?)(?:px)?(?=\\s*(?:;|$))`));
+    assert.ok(declaration, `missing ${property} in ${rule}`);
+    return Number(declaration[1]);
+  };
+  const track = cssRule(".premium-atlas-track");
+  const milestone = cssRule(".premium-atlas-milestone");
+  const dot = cssRule(".premium-atlas-milestone::before");
+
+  assert.ok(pixels(track, "height") >= 8, "the progress track should be visibly thicker");
+  assert.equal(
+    pixels(track, "top") + pixels(track, "height") / 2,
+    pixels(milestone, "top") + pixels(dot, "top") + pixels(dot, "height") / 2,
+    "milestone dots should share the progress track centerline",
+  );
+  assert.doesNotMatch(source, /premium-milestone-icon|premium-milestone-copy|premium-ticket-spark|premium-ticket-check/);
 });
 
 test("tracks the Sites project and production route", async () => {
