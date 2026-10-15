@@ -49,15 +49,43 @@ test("keeps the visualization sandboxed after the design update", async () => {
   assert.match(source, /\.premium-hot-icon svg \{[^}]*stroke-width: 1\.65/);
   assert.doesNotMatch(source, /data-lucide=&quot;orbit&quot;/);
   assert.doesNotMatch(source, /PERSONALITY MATCH|与你同频的鉴定偏好/);
-  assert.match(source, /\.premium-social \{[^}]*min-height: 205px;[^}]*padding: 13px;/);
-  assert.match(source, /\.premium-social-body \{[^}]*min-height: 68px;[^}]*margin: 8px 0 7px;/);
-  assert.match(source, /\.premium-hot-strip \{[^}]*min-height: 56px;[^}]*padding: 7px 8px;/);
+  assert.match(source, /\.premium-social \{[^}]*padding: 13px;/);
+  assert.match(source, /\.premium-match-panel \{[^}]*margin-top: 8px;[^}]*padding: 10px;/);
   assert.match(source, /\.premium-atlas, \.premium-social \{ width: 100%; \}/);
   assert.match(source, /\.premium-content \{[^}]*overflow-y: auto;/);
   assert.doesNotMatch(source, /新人首鉴福利|NEWCOMER GIFT|30元专鉴券/);
   assert.doesNotMatch(source, /class=&quot;premium-benefit&quot;|id=&quot;premium-open-sheet&quot;/);
   assert.doesNotMatch(source, /#(?:000|000000)\b|rgba?\(0,\s*0,\s*0/i);
   assert.doesNotMatch(source, /#050810|rgba\(5,\s*8,\s*16/i);
+});
+
+test("groups trait information and category action into one trend panel", async () => {
+  const source = (await readFile(previewPath, "utf8"))
+    .replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">")
+    .replaceAll("&quot;", '"');
+  const panel = source.match(
+    /<div class="premium-match-panel">([\s\S]*?)<\/div>\s*<div class="premium-dots"/,
+  );
+  assert.ok(panel, "the trait and category content should share one visual panel");
+  assert.equal((source.match(/class="premium-match-panel"/g) || []).length, 1);
+  assert.match(panel[1], /id="premium-social-body"/);
+  assert.match(panel[1], /id="premium-hot-strip"/);
+  assert.match(panel[1], /id="premium-people"/);
+  assert.match(panel[1], /id="premium-trait"/);
+  assert.match(panel[1], /id="premium-percent"/);
+  assert.match(panel[1], /<button[^>]*id="premium-go"[^>]*type="button"/);
+
+  for (const selector of ["premium-social-body", "premium-hot-strip"]) {
+    const styles = source.match(new RegExp(`\\.${selector} \\{([^}]+)\\}`));
+    assert.ok(styles);
+    assert.doesNotMatch(
+      styles[1],
+      /(?:^|;)\s*(?:background(?:-image|-color)?|border|border-radius|box-shadow):/,
+      `${selector} must not retain independent card chrome`,
+    );
+  }
+  assert.match(source, /\.premium-hot-strip \{[^}]*border-top: 1px solid/);
 });
 
 test("places the interactive achievement atlas above the trend card", async () => {
@@ -151,7 +179,7 @@ test("claiming the five-category reward updates visible and accessible state onl
   assert.equal(messages.length, 1, "a claimed reward must not be granted again");
 });
 
-test("uses simple milestone labels with dots centered on a thicker progress track", async () => {
+test("keeps the eleven-category reward in a compact pill beside aligned progress nodes", async () => {
   const source = await readFile(previewPath, "utf8");
   const cssRule = (selector) => {
     const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -175,6 +203,9 @@ test("uses simple milestone labels with dots centered on a thicker progress trac
     "milestone dots should share the progress track centerline",
   );
   assert.doesNotMatch(source, /premium-milestone-icon|premium-milestone-copy|premium-ticket-spark|premium-ticket-check/);
+  assert.match(source, /premium-atlas-eleven&quot;[^\n]*集齐11类，解锁2张专家鉴别券/);
+  assert.match(source, /class=&quot;premium-milestone-pill&quot;&gt;&lt;b&gt;11类&lt;\/b&gt;&lt;em&gt;券 ×2&lt;\/em&gt;/);
+  assert.equal((source.match(/class=&quot;premium-milestone-pill&quot;/g) || []).length, 1);
 });
 
 test("tracks the Sites project and production route", async () => {
