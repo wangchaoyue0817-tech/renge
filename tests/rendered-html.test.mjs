@@ -102,9 +102,9 @@ test("places the interactive achievement atlas above the trend card", async () =
   assert.doesNotMatch(source, /premium-atlas-light|去点亮/);
   assert.match(source, /id=&quot;premium-atlas-overview&quot;[^>]*aria-controls=&quot;premium-atlas-gallery&quot;/);
   assert.match(source, /id=&quot;premium-atlas-expand&quot;[^>]*aria-controls=&quot;premium-atlas-gallery&quot;/);
-  assert.match(source, /aria-label=&quot;领取5类里程碑奖励&quot;/);
+  assert.match(source, /aria-label=&quot;已点亮5类，领取1张专家鉴别券&quot;/);
   assert.match(source, /aria-label=&quot;集齐11类，解锁2张专家鉴别券&quot;/);
-  assert.match(source, /id=&quot;premium-atlas-next&quot;&gt;再点亮2类&lt;\/span&gt;/);
+  assert.match(source, /id=&quot;premium-atlas-next&quot;&gt;再点亮5类领2张&lt;\/span&gt;/);
   assert.match(source, /选择下一个点亮品类/);
 
   const badgeNames = [
@@ -136,11 +136,11 @@ test("claiming the five-category reward updates visible and accessible state onl
 
   const attributes = new Map([
     ["aria-pressed", "false"],
-    ["aria-label", "领取5类里程碑奖励"],
+    ["aria-label", "已点亮5类，领取1张专家鉴别券"],
   ]);
-  const status = { textContent: "待领取" };
+  const status = { textContent: "领取1张券" };
   const progressAttributes = new Map();
-  const nextReward = { textContent: "再点亮2类" };
+  const nextReward = { textContent: "再点亮5类领2张" };
   const messages = [];
   const button = {
     getAttribute: (name) => attributes.get(name),
@@ -166,24 +166,57 @@ test("claiming the five-category reward updates visible and accessible state onl
 
   claim({ currentTarget: button });
   assert.equal(attributes.get("aria-pressed"), "true");
-  assert.equal(attributes.get("aria-label"), "5类里程碑奖励已领取");
-  assert.equal(status.textContent, "已领取");
+  assert.equal(attributes.get("aria-disabled"), "true");
+  assert.equal(
+    attributes.get("aria-label"),
+    "5类奖励已领取，已获得1张专家鉴别券",
+  );
+  assert.equal(status.textContent, "已领1张券");
+  assert.notEqual(button.disabled, true, "keep the claimed button in the keyboard focus order");
+  assert.equal(attributes.has("disabled"), false, "use aria-disabled rather than native disabled");
   assert.equal(
     progressAttributes.get("aria-label"),
-    "已点亮6类；5类奖励已领取；11类可领取2张专家鉴别券",
+    "已点亮6类；5类奖励已领取1张专家鉴别券；集齐11类可领取2张专家鉴别券",
   );
-  assert.equal(nextReward.textContent, "再点亮2类");
+  assert.equal(nextReward.textContent, "再点亮5类领2张");
   assert.deepEqual(messages, ["专家鉴别券 ×1 已领取"]);
 
+  const claimedAttributes = [...attributes];
   claim({ currentTarget: button });
   assert.equal(messages.length, 1, "a claimed reward must not be granted again");
+  assert.deepEqual([...attributes], claimedAttributes);
+  assert.equal(status.textContent, "已领1张券");
 });
 
-test("keeps the eleven-category reward in a compact pill beside aligned progress nodes", async () => {
+test("explains both reward thresholds and distinguishes claimable from locked rewards", async () => {
+  const source = (await readFile(previewPath, "utf8"))
+    .replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">")
+    .replaceAll("&quot;", '"');
+  assert.match(source, /点亮5类领1张，集齐11类领2张/);
+  assert.doesNotMatch(source, /奖励档位已标注在进度条关键节点|再点亮2类/);
+
+  const five = source.match(/<button\b([^>]*id="premium-atlas-reward"[^>]*)>([\s\S]*?)<\/button>/);
+  assert.ok(five, "the unlocked five-category reward should be a button");
+  assert.match(five[1], /type="button"/);
+  assert.match(five[1], /aria-label="已点亮5类，领取1张专家鉴别券"/);
+  assert.match(five[1], /aria-pressed="false"/);
+  assert.doesNotMatch(five[1], /(?:^|\s)disabled(?:\s|=|$)|aria-disabled="true"/);
+  assert.match(five[2], /<span class="premium-milestone-pill">\s*<b>5类已达成<\/b>\s*<em>领取1张券<\/em>\s*<\/span>/);
+
+  assert.match(
+    source,
+    /<span class="premium-atlas-milestone premium-atlas-eleven" aria-label="集齐11类，解锁2张专家鉴别券">\s*<span class="premium-milestone-pill">\s*<b>集齐11类<\/b>\s*<em>解锁2张券<\/em>\s*<\/span>\s*<\/span>/,
+  );
+  assert.doesNotMatch(source, /<button\b[^>]*premium-atlas-eleven/);
+  assert.equal((source.match(/class="premium-milestone-pill"/g) || []).length, 2);
+});
+
+test("keeps both reward pills compact beside aligned progress nodes", async () => {
   const source = await readFile(previewPath, "utf8");
   const cssRule = (selector) => {
     const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const rule = source.match(new RegExp(`${escapedSelector} \\{([^}]+)\\}`));
+    const rule = source.match(new RegExp(`^${escapedSelector} \\{([^}]+)\\}`, "m"));
     assert.ok(rule, `missing CSS rule for ${selector}`);
     return rule[1];
   };
@@ -193,7 +226,9 @@ test("keeps the eleven-category reward in a compact pill beside aligned progress
     return Number(declaration[1]);
   };
   const track = cssRule(".premium-atlas-track");
+  const rail = cssRule(".premium-atlas-rail");
   const milestone = cssRule(".premium-atlas-milestone");
+  const pill = cssRule(".premium-milestone-pill");
   const dot = cssRule(".premium-atlas-milestone::before");
 
   assert.ok(pixels(track, "height") >= 8, "the progress track should be visibly thicker");
@@ -202,10 +237,19 @@ test("keeps the eleven-category reward in a compact pill beside aligned progress
     pixels(milestone, "top") + pixels(dot, "top") + pixels(dot, "height") / 2,
     "milestone dots should share the progress track centerline",
   );
+  assert.equal(pixels(rail, "height"), 72);
+  assert.equal(pixels(milestone, "width"), 88);
+  assert.equal(pixels(milestone, "height"), 68);
+  assert.match(milestone, /padding:\s*22px 0 2px;/);
+  assert.equal(pixels(pill, "width"), 88);
+  assert.equal(pixels(pill, "height"), 44);
+  assert.equal(pixels(pill, "border-radius"), 12);
+  assert.match(pill, /flex-direction:\s*column;/);
+  assert.match(pill, /border:\s*1px solid/);
+  assert.match(pill, /background:/);
   assert.doesNotMatch(source, /premium-milestone-icon|premium-milestone-copy|premium-ticket-spark|premium-ticket-check/);
   assert.match(source, /premium-atlas-eleven&quot;[^\n]*集齐11类，解锁2张专家鉴别券/);
-  assert.match(source, /class=&quot;premium-milestone-pill&quot;&gt;&lt;b&gt;11类&lt;\/b&gt;&lt;em&gt;券 ×2&lt;\/em&gt;/);
-  assert.equal((source.match(/class=&quot;premium-milestone-pill&quot;/g) || []).length, 1);
+  assert.equal((source.match(/class=&quot;premium-milestone-pill&quot;/g) || []).length, 2);
 });
 
 test("tracks the Sites project and production route", async () => {
