@@ -138,7 +138,7 @@ test("claiming the five-category reward updates visible and accessible state onl
     ["aria-pressed", "false"],
     ["aria-label", "已点亮5类，领取1张专家鉴别券"],
   ]);
-  const status = { textContent: "领取1张券" };
+  const status = { textContent: "领1张券" };
   const progressAttributes = new Map();
   const nextReward = { textContent: "再点亮5类领2张" };
   const messages = [];
@@ -171,7 +171,7 @@ test("claiming the five-category reward updates visible and accessible state onl
     attributes.get("aria-label"),
     "5类奖励已领取，已获得1张专家鉴别券",
   );
-  assert.equal(status.textContent, "已领1张券");
+  assert.equal(status.textContent, "已领1张");
   assert.notEqual(button.disabled, true, "keep the claimed button in the keyboard focus order");
   assert.equal(attributes.has("disabled"), false, "use aria-disabled rather than native disabled");
   assert.equal(
@@ -185,7 +185,7 @@ test("claiming the five-category reward updates visible and accessible state onl
   claim({ currentTarget: button });
   assert.equal(messages.length, 1, "a claimed reward must not be granted again");
   assert.deepEqual([...attributes], claimedAttributes);
-  assert.equal(status.textContent, "已领1张券");
+  assert.equal(status.textContent, "已领1张");
 });
 
 test("explains both reward thresholds and distinguishes claimable from locked rewards", async () => {
@@ -202,17 +202,17 @@ test("explains both reward thresholds and distinguishes claimable from locked re
   assert.match(five[1], /aria-label="已点亮5类，领取1张专家鉴别券"/);
   assert.match(five[1], /aria-pressed="false"/);
   assert.doesNotMatch(five[1], /(?:^|\s)disabled(?:\s|=|$)|aria-disabled="true"/);
-  assert.match(five[2], /<span class="premium-milestone-pill">\s*<b>5类已达成<\/b>\s*<em>领取1张券<\/em>\s*<\/span>/);
+  assert.match(five[2], /<span class="premium-milestone-pill">\s*<b>5类<\/b>\s*<em>领1张券<\/em>\s*<\/span>/);
 
   assert.match(
     source,
-    /<span class="premium-atlas-milestone premium-atlas-eleven" aria-label="集齐11类，解锁2张专家鉴别券">\s*<span class="premium-milestone-pill">\s*<b>集齐11类<\/b>\s*<em>解锁2张券<\/em>\s*<\/span>\s*<\/span>/,
+    /<span class="premium-atlas-milestone premium-atlas-eleven" aria-label="集齐11类，解锁2张专家鉴别券">\s*<span class="premium-milestone-pill">\s*<b>11类<\/b>\s*<em>解锁2张<\/em>\s*<\/span>\s*<\/span>/,
   );
   assert.doesNotMatch(source, /<button\b[^>]*premium-atlas-eleven/);
   assert.equal((source.match(/class="premium-milestone-pill"/g) || []).length, 2);
 });
 
-test("keeps both reward pills compact beside aligned progress nodes", async () => {
+test("floats both compact single-line reward pills on the progress track", async () => {
   const source = await readFile(previewPath, "utf8");
   const cssRule = (selector) => {
     const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -229,24 +229,45 @@ test("keeps both reward pills compact beside aligned progress nodes", async () =
   const rail = cssRule(".premium-atlas-rail");
   const milestone = cssRule(".premium-atlas-milestone");
   const pill = cssRule(".premium-milestone-pill");
-  const dot = cssRule(".premium-atlas-milestone::before");
+  const five = cssRule(".premium-atlas-five");
+  const eleven = cssRule(".premium-atlas-eleven");
 
   assert.ok(pixels(track, "height") >= 8, "the progress track should be visibly thicker");
+  assert.equal(pixels(track, "top"), 18);
+  assert.equal(pixels(track, "left"), 2);
+  assert.equal(pixels(track, "right"), 52);
   assert.equal(
     pixels(track, "top") + pixels(track, "height") / 2,
-    pixels(milestone, "top") + pixels(dot, "top") + pixels(dot, "height") / 2,
-    "milestone dots should share the progress track centerline",
+    pixels(milestone, "top") + pixels(milestone, "height") / 2,
+    "reward pills should float centered on the track rather than below it",
   );
-  assert.equal(pixels(rail, "height"), 72);
-  assert.equal(pixels(milestone, "width"), 88);
-  assert.equal(pixels(milestone, "height"), 68);
-  assert.match(milestone, /padding:\s*22px 0 2px;/);
-  assert.equal(pixels(pill, "width"), 88);
-  assert.equal(pixels(pill, "height"), 44);
-  assert.equal(pixels(pill, "border-radius"), 12);
-  assert.match(pill, /flex-direction:\s*column;/);
+  assert.equal(pixels(rail, "height"), 44, "the whole progress area should occupy just one touch-target row");
+  assert.equal(pixels(milestone, "width"), 104);
+  assert.equal(pixels(milestone, "height"), 44, "keep the reward button's touch target at 44px");
+  assert.match(milestone, /padding:\s*7px 0;/);
+  assert.equal(pixels(pill, "width"), 104);
+  assert.equal(pixels(pill, "height"), 30);
+  assert.equal(pixels(pill, "border-radius"), 999);
+  assert.match(pill, /flex-direction:\s*row;/);
+  assert.match(milestone, /white-space:\s*nowrap;/);
   assert.match(pill, /border:\s*1px solid/);
   assert.match(pill, /background:/);
+  assert.doesNotMatch(source, /\.premium-atlas-(?:milestone|five|eleven)[^{\n]*::before/);
+
+  const fivePosition = five.match(/left:\s*calc\((\d+(?:\.\d+)?)% - (\d+(?:\.\d+)?)px\)/);
+  assert.ok(fivePosition, "position the five-category node relative to the shortened track");
+  assert.match(five, /transform:\s*translateX\(-50%\)/);
+  assert.equal(pixels(eleven, "right"), 0);
+  for (const railWidth of [248, 284, 338]) {
+    const trackWidth = railWidth - pixels(track, "left") - pixels(track, "right");
+    const fiveCenter = railWidth * Number(fivePosition[1]) / 100 - Number(fivePosition[2]);
+    const expectedFiveCenter = pixels(track, "left") + trackWidth * 5 / 11;
+    assert.ok(Math.abs(fiveCenter - expectedFiveCenter) < 0.02, "the first reward must stay at 5/11 progress across screen widths");
+    const elevenCenter = railWidth - pixels(eleven, "right") - pixels(milestone, "width") / 2;
+    assert.equal(elevenCenter, pixels(track, "left") + trackWidth, "the final reward should center on the track endpoint");
+    assert.ok(fiveCenter - pixels(pill, "width") / 2 >= 0, "the first reward should stay within the card");
+    assert.ok(elevenCenter - fiveCenter >= pixels(pill, "width"), "the reward pills must not overlap on narrow screens");
+  }
   assert.doesNotMatch(source, /premium-milestone-icon|premium-milestone-copy|premium-ticket-spark|premium-ticket-check/);
   assert.match(source, /premium-atlas-eleven&quot;[^\n]*集齐11类，解锁2张专家鉴别券/);
   assert.equal((source.match(/class=&quot;premium-milestone-pill&quot;/g) || []).length, 2);
