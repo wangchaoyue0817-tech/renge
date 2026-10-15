@@ -1119,8 +1119,14 @@ html&gt;body{padding:0}&lt;/style&gt;
           &lt;/div&gt;
           &lt;div class=&quot;premium-atlas-rail&quot; aria-label=&quot;已点亮6类；5类奖励待领取；11类可领取2张专家鉴别券&quot;&gt;
             &lt;span class=&quot;premium-atlas-track&quot; aria-hidden=&quot;true&quot;&gt;&lt;i&gt;&lt;/i&gt;&lt;b&gt;&lt;/b&gt;&lt;/span&gt;
-            &lt;button class=&quot;premium-atlas-milestone premium-atlas-five&quot; id=&quot;premium-atlas-reward&quot; type=&quot;button&quot; aria-label=&quot;领取5类里程碑奖励&quot; aria-pressed=&quot;false&quot;&gt;&lt;i data-lucide=&quot;star&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;b&gt;5类&lt;/b&gt;&lt;em&gt;待领&lt;/em&gt;&lt;/button&gt;
-            &lt;span class=&quot;premium-atlas-milestone premium-atlas-eleven&quot;&gt;&lt;b&gt;11类&lt;/b&gt;&lt;em&gt;券×2&lt;/em&gt;&lt;/span&gt;
+            &lt;button class=&quot;premium-atlas-milestone premium-atlas-five&quot; id=&quot;premium-atlas-reward&quot; type=&quot;button&quot; aria-label=&quot;领取5类里程碑奖励&quot; aria-pressed=&quot;false&quot;&gt;
+              &lt;span class=&quot;premium-milestone-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot;&gt;&lt;path d=&quot;M5 5.5h14a1 1 0 0 1 1 1V9a3 3 0 0 0 0 6v2.5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V15a3 3 0 0 0 0-6V6.5a1 1 0 0 1 1-1Z&quot;/&gt;&lt;path d=&quot;M9 6v2m0 3v2m0 3v2&quot; opacity=&quot;.45&quot;/&gt;&lt;path class=&quot;premium-ticket-spark&quot; d=&quot;m14 9 .8 2.2L17 12l-2.2.8L14 15l-.8-2.2L11 12l2.2-.8Z&quot;/&gt;&lt;path class=&quot;premium-ticket-check&quot; d=&quot;m11.5 12 1.7 1.7 3.3-3.4&quot;/&gt;&lt;/svg&gt;&lt;/span&gt;
+              &lt;span class=&quot;premium-milestone-copy&quot;&gt;&lt;b&gt;5&lt;small&gt;类&lt;/small&gt;&lt;/b&gt;&lt;em&gt;待领取&lt;/em&gt;&lt;/span&gt;
+            &lt;/button&gt;
+            &lt;span class=&quot;premium-atlas-milestone premium-atlas-eleven&quot; aria-label=&quot;集齐11类，解锁2张专家鉴别券&quot;&gt;
+              &lt;span class=&quot;premium-milestone-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot;&gt;&lt;path d=&quot;M7 4h11a2 2 0 0 1 2 2v10&quot; opacity=&quot;.45&quot;/&gt;&lt;path d=&quot;M4 7h12a1 1 0 0 1 1 1v2a2.5 2.5 0 0 0 0 5v3a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-3a2.5 2.5 0 0 0 0-5V8a1 1 0 0 1 1-1Z&quot;/&gt;&lt;path d=&quot;M8 8v2m0 3v2m0 2v1&quot; opacity=&quot;.5&quot;/&gt;&lt;/svg&gt;&lt;/span&gt;
+              &lt;span class=&quot;premium-milestone-copy&quot;&gt;&lt;b&gt;11&lt;small&gt;类&lt;/small&gt;&lt;/b&gt;&lt;em&gt;券 ×2&lt;/em&gt;&lt;/span&gt;
+            &lt;/span&gt;
           &lt;/div&gt;
         &lt;/div&gt;
 
@@ -1134,7 +1140,6 @@ html&gt;body{padding:0}&lt;/style&gt;
             &lt;/span&gt;
             &lt;span class=&quot;premium-atlas-copy&quot;&gt;&lt;strong&gt;达人徽章图鉴 &lt;i&gt;6/11&lt;/i&gt;&lt;/strong&gt;&lt;small id=&quot;premium-atlas-state&quot;&gt;查看全部&lt;/small&gt;&lt;/span&gt;
           &lt;/button&gt;
-          &lt;button class=&quot;premium-action premium-atlas-light&quot; id=&quot;premium-atlas-light&quot; type=&quot;button&quot; aria-controls=&quot;premium-category-sheet&quot;&gt;去点亮&lt;/button&gt;
           &lt;button class=&quot;premium-atlas-expand&quot; id=&quot;premium-atlas-expand&quot; type=&quot;button&quot; aria-label=&quot;展开全部徽章&quot; aria-expanded=&quot;false&quot; aria-controls=&quot;premium-atlas-gallery&quot;&gt;&lt;i data-lucide=&quot;chevron-down&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/button&gt;
         &lt;/div&gt;
 
@@ -1285,19 +1290,32 @@ html&gt;body{padding:0}&lt;/style&gt;
 .premium-atlas-summary strong { color: var(--premium-text); font-size: 18px; font-weight: 650; line-height: 1; font-variant-numeric: tabular-nums; }
 .premium-atlas-summary i { color: var(--premium-copy); font-size: 9px; font-style: normal; }
 #premium-atlas-next { color: #cfc6ee; font-weight: 600; }
-.premium-atlas-rail { position: relative; height: 38px; margin-top: 2px; }
-.premium-atlas-track { position: absolute; top: 12px; right: 2px; left: 2px; height: 5px; overflow: hidden; border: 1px solid rgba(166,188,227,.13); border-radius: 6px; background: #292d4a; box-shadow: inset 0 1px 4px rgba(8,12,38,.54); }
+.premium-atlas-rail { position: relative; height: 46px; margin-top: 3px; }
+.premium-atlas-track { position: absolute; top: 19px; right: 2px; left: 2px; height: 4px; overflow: hidden; border: 1px solid rgba(166,188,227,.13); border-radius: 6px; background: #292d4a; box-shadow: inset 0 1px 4px rgba(8,12,38,.3); }
 .premium-atlas-track i { position: absolute; inset: 0 auto 0 0; width: 54.5%; border-radius: inherit; background: linear-gradient(90deg, var(--premium-blue), var(--premium-purple) 72%, #b56fe1); box-shadow: 0 0 12px rgba(123,85,234,.48); }
 .premium-atlas-track b { position: absolute; top: 50%; left: 54.5%; width: 9px; height: 9px; border: 1.5px solid #eee9ff; border-radius: 50%; background: #aa72df; box-shadow: 0 0 9px rgba(123,85,234,.6); transform: translate(-50%,-50%); }
-.premium-atlas-milestone { position: absolute; top: 0; z-index: 2; height: 28px; padding: 0 8px; display: flex; align-items: center; justify-content: center; gap: 3px; border-radius: 9px; font-size: 9px; line-height: 1; box-shadow: 0 5px 14px rgba(8,12,38,.2); }
-.premium-atlas-milestone b, .premium-atlas-milestone em { font-style: normal; }
-.premium-atlas-milestone svg { width: 10px; height: 10px; }
-.premium-atlas-five { left: 45.45%; border: 1px solid rgba(221,199,255,.48); color: #fff; background: linear-gradient(125deg, #5b68ed, #8b56d8); transform: translateX(-50%); cursor: pointer; }
-.premium-atlas-five::after { content: &quot;&quot;; position: absolute; inset: -7px; }
-.premium-atlas-five em { color: #e9dfff; font-size: 8px; }
-.premium-atlas-eleven { right: 0; border: 1px solid rgba(255,200,91,.34); color: var(--premium-yellow-soft); background: linear-gradient(130deg, rgba(103,76,45,.92), rgba(29,29,45,.98)); }
-.premium-atlas-eleven em { color: #cdb47c; font-size: 8px; }
-.premium-atlas-strip { min-height: 56px; margin-top: 4px; padding: 6px 7px; display: grid; grid-template-columns: minmax(0,1fr) auto 34px; gap: 6px; align-items: center; border: 1px solid rgba(166,188,227,.14); border-radius: 14px; background: linear-gradient(105deg, rgba(31,35,78,.72), rgba(18,23,55,.76)); }
+.premium-atlas-milestone { position: absolute; top: 1px; z-index: 2; height: 40px; padding: 5px 9px; display: flex; align-items: center; justify-content: center; gap: 7px; border-radius: 11px; line-height: 1; box-shadow: 0 3px 10px rgba(8,12,38,.22), inset 0 1px 0 rgba(241,240,255,.08); }
+.premium-milestone-icon { width: 24px; height: 27px; display: grid; place-items: center; flex: none; border-right: 1px solid rgba(209,195,255,.18); padding-right: 5px; color: #ffe0a2; }
+.premium-milestone-icon svg { width: 21px; height: 21px; stroke: currentColor; stroke-width: 1.45; stroke-linecap: round; stroke-linejoin: round; }
+.premium-milestone-copy { display: grid; gap: 4px; min-width: 32px; text-align: left; }
+.premium-milestone-copy b { color: #f1f0ff; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.premium-milestone-copy b small { margin-left: 2px; color: #cec6eb; font-size: 10px; font-weight: 500; letter-spacing: 0; }
+.premium-milestone-copy em { color: #e4d9ff; font-size: 10px; font-weight: 500; font-style: normal; white-space: nowrap; }
+.premium-atlas-five { left: 45.45%; border: 1px solid rgba(184,169,255,.58); background: linear-gradient(125deg, #454b98, #51347d); transform: translateX(-50%); cursor: pointer; transition: border-color .2s, box-shadow .2s, background .2s; }
+.premium-atlas-five::after { content: &quot;&quot;; position: absolute; inset: -3px; }
+.premium-atlas-five:hover { border-color: #c7b8ff; box-shadow: 0 3px 15px rgba(123,85,234,.25), inset 0 1px 0 rgba(241,240,255,.12); }
+.premium-atlas-five:active { background: #403b73; }
+.premium-atlas-five:focus-visible, .premium-atlas-overview:focus-visible, .premium-atlas-expand:focus-visible { outline: 2px solid #c7b8ff; outline-offset: 3px; }
+.premium-ticket-check { display: none; }
+.premium-atlas-five[aria-pressed=&quot;true&quot;] { border-color: rgba(166,188,227,.26); background: linear-gradient(125deg, #2c3559, #303052); box-shadow: inset 0 1px 0 rgba(241,240,255,.05); cursor: default; }
+.premium-atlas-five[aria-pressed=&quot;true&quot;] .premium-milestone-icon { color: #b6c6df; }
+.premium-atlas-five[aria-pressed=&quot;true&quot;] em { color: #c1bed7; }
+.premium-atlas-five[aria-pressed=&quot;true&quot;] .premium-ticket-spark { display: none; }
+.premium-atlas-five[aria-pressed=&quot;true&quot;] .premium-ticket-check { display: block; }
+.premium-atlas-eleven { right: 0; border: 1px solid rgba(228,205,162,.25); background: linear-gradient(125deg, #34334b, #242b45); }
+.premium-atlas-eleven .premium-milestone-icon { color: #d5bd91; border-right-color: rgba(228,205,162,.16); }
+.premium-atlas-eleven em { color: #d5bd91; }
+.premium-atlas-strip { min-height: 54px; margin-top: 2px; padding: 4px 7px; display: grid; grid-template-columns: minmax(0,1fr) 38px; gap: 6px; align-items: center; border: 1px solid rgba(166,188,227,.14); border-radius: 14px; background: linear-gradient(105deg, rgba(31,35,78,.72), rgba(18,23,55,.76)); }
 .premium-atlas-overview { min-width: 0; height: 44px; padding: 0; display: grid; grid-template-columns: 67px minmax(0,1fr); gap: 8px; align-items: center; border: 0; color: var(--premium-text); text-align: left; background: transparent; cursor: pointer; }
 .premium-badge-stack { position: relative; width: 67px; height: 42px; display: block; }
 .premium-badge-stack img { position: absolute; top: 1px; width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 5px 6px rgba(8,12,38,.36)); }
@@ -1307,11 +1325,11 @@ html&gt;body{padding:0}&lt;/style&gt;
 .premium-badge-stack b { position: absolute; right: 0; bottom: 0; z-index: 4; min-width: 25px; height: 19px; padding: 0 5px; display: grid; place-items: center; border: 1px solid rgba(184,169,255,.3); border-radius: 10px; color: #ece6ff; background: #584c96; font-size: 8px; }
 .premium-atlas-copy { min-width: 0; }
 .premium-atlas-copy strong, .premium-atlas-copy small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.premium-atlas-copy strong { color: var(--premium-text); font-size: 11px; font-weight: 650; }
+.premium-atlas-copy strong { color: var(--premium-text); font-size: 12px; font-weight: 650; }
 .premium-atlas-copy strong i { color: #aaa1d1; font-size: 9px; font-style: normal; }
-.premium-atlas-copy small { margin-top: 3px; color: var(--premium-faint); font-size: 9px; letter-spacing: 0; }
-.premium-atlas-light { min-width: 68px; min-height: 40px; padding: 0 12px; border-radius: 13px; font-size: 11px; }
-.premium-atlas-expand { width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid rgba(166,188,227,.18); border-radius: 50%; color: #c8c4e8; background: rgba(89,95,242,.08); cursor: pointer; }
+.premium-atlas-copy small { margin-top: 3px; color: #aaa9c3; font-size: 10px; letter-spacing: 0; }
+.premium-atlas-expand { position: relative; width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid rgba(166,188,227,.14); border-radius: 50%; color: #c8c4e8; background: rgba(89,95,242,.06); cursor: pointer; }
+.premium-atlas-expand::after { content: &quot;&quot;; position: absolute; inset: -5px; }
 .premium-atlas-expand svg { width: 17px; height: 17px; transition: transform .25s ease; }
 .premium-atlas-expand[aria-expanded=&quot;true&quot;] svg { transform: rotate(180deg); }
 .premium-atlas-gallery { max-width: 100%; padding-top: 8px; display: grid; grid-auto-flow: column; grid-auto-columns: 76px; gap: 7px; overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: none; }
@@ -1391,13 +1409,12 @@ html&gt;body{padding:0}&lt;/style&gt;
   .premium-atlas { padding-inline: 10px; }
   .premium-atlas-benefit { grid-template-columns: 38px minmax(0,1fr) 16px; gap: 7px; padding-inline: 7px; }
   .premium-atlas-ticket { width: 36px; height: 34px; }
-  .premium-atlas-strip { grid-template-columns: minmax(0,1fr) auto 32px; padding-inline: 6px; }
+  .premium-atlas-strip { padding-inline: 6px; }
   .premium-atlas-overview { grid-template-columns: 61px minmax(0,1fr); gap: 6px; }
   .premium-badge-stack { width: 61px; }
   .premium-badge-stack img { width: 37px; height: 37px; }
   .premium-badge-stack img:nth-child(2) { left: 15px; }
   .premium-badge-stack img:nth-child(3) { left: 30px; }
-  .premium-atlas-light { min-width: 64px; padding-inline: 9px; }
   .premium-action-small { padding-left: 9px; gap: 5px; }
   .premium-category { padding: 6px; gap: 5px; }
   .premium-category &gt; span:first-child { width: 30px; height: 30px; }
@@ -1503,7 +1520,6 @@ html&gt;body{padding:0}&lt;/style&gt;
   }
 
   root.querySelector('#premium-atlas-benefit').addEventListener('click', openSheet);
-  root.querySelector('#premium-atlas-light').addEventListener('click', openSheet);
   atlasOverview.addEventListener('click', () =&gt; setAtlasExpanded(atlasGallery.hidden));
   atlasExpand.addEventListener('click', () =&gt; setAtlasExpanded(atlasGallery.hidden));
   root.querySelectorAll('.premium-badge-item[data-unlocked=&quot;false&quot;]').forEach(item =&gt; item.addEventListener('click', openSheet));
@@ -1512,7 +1528,8 @@ html&gt;body{padding:0}&lt;/style&gt;
     if (button.getAttribute('aria-pressed') === 'true') return;
     button.setAttribute('aria-pressed','true');
     button.setAttribute('aria-label','5类里程碑奖励已领取');
-    button.querySelector('em').textContent = '已领';
+    button.querySelector('em').textContent = '已领取';
+    root.querySelector('.premium-atlas-rail').setAttribute('aria-label','已点亮6类；5类奖励已领取；11类可领取2张专家鉴别券');
     root.querySelector('#premium-atlas-next').textContent = '距双券 5 类';
     showToast('专家鉴别券 ×1 已领取');
   });

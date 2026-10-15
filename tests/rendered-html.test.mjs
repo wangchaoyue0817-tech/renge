@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
-import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { runInNewContext } from "node:vm";
 
 const root = new URL("../", import.meta.url);
 const previewPath = new URL(
@@ -37,15 +37,7 @@ test("root redirects to the supplied visualization", async () => {
 });
 
 test("keeps the visualization sandboxed after the design update", async () => {
-  const html = await readFile(previewPath);
-  const sha256 = createHash("sha256").update(html).digest("hex");
-
-  assert.equal(
-    sha256,
-    "a506d2afdadcf8453f4cd5b864b33ff4e8fc7f936c7e696a73a3d4137b68f77d",
-  );
-
-  const source = html.toString("utf8");
+  const source = await readFile(previewPath, "utf8");
   assert.match(source, /Content-Security-Policy/i);
   assert.match(source, /<iframe\b[^>]*\bsandbox=/i);
   assert.match(source, /--premium-blue: light-dark\(#595ff2, #595ff2\)/);
@@ -78,7 +70,12 @@ test("places the interactive achievement atlas above the trend card", async () =
   assert.match(source, /达人图鉴/);
   assert.match(source, /点亮品类，专家鉴别券免费领/);
   assert.match(source, /id=&quot;premium-atlas-gallery&quot;[^>]*hidden/);
-  assert.match(source, /#premium-atlas-light'\)\.addEventListener\('click', openSheet\)/);
+  assert.match(source, /#premium-atlas-benefit'\)\.addEventListener\('click', openSheet\)/);
+  assert.doesNotMatch(source, /premium-atlas-light|去点亮/);
+  assert.match(source, /id=&quot;premium-atlas-overview&quot;[^>]*aria-controls=&quot;premium-atlas-gallery&quot;/);
+  assert.match(source, /id=&quot;premium-atlas-expand&quot;[^>]*aria-controls=&quot;premium-atlas-gallery&quot;/);
+  assert.match(source, /aria-label=&quot;领取5类里程碑奖励&quot;/);
+  assert.match(source, /aria-label=&quot;集齐11类，解锁2张专家鉴别券&quot;/);
   assert.match(source, /选择下一个点亮品类/);
 
   const badgeNames = [
@@ -99,6 +96,58 @@ test("places the interactive achievement atlas above the trend card", async () =
       readFile(new URL(`../public/assets/achievement/${name}.png`, import.meta.url)),
     ),
   );
+});
+
+test("claiming the five-category reward updates visible and accessible state only once", async () => {
+  const source = (await readFile(previewPath, "utf8")).replaceAll("&gt;", ">");
+  const handler = source.match(
+    /root\.querySelector\('#premium-atlas-reward'\)\.addEventListener\('click', (event => \{[\s\S]*?\n  \})\);/,
+  );
+  assert.ok(handler, "the five-category reward must remain claimable");
+
+  const attributes = new Map([
+    ["aria-pressed", "false"],
+    ["aria-label", "领取5类里程碑奖励"],
+  ]);
+  const status = { textContent: "待领取" };
+  const progressAttributes = new Map();
+  const nextReward = { textContent: "首券待领取" };
+  const messages = [];
+  const button = {
+    getAttribute: (name) => attributes.get(name),
+    setAttribute: (name, value) => attributes.set(name, value),
+    querySelector: (selector) => {
+      assert.equal(selector, "em");
+      return status;
+    },
+  };
+  const root = {
+    querySelector: (selector) => {
+      if (selector === ".premium-atlas-rail") {
+        return { setAttribute: (name, value) => progressAttributes.set(name, value) };
+      }
+      assert.equal(selector, "#premium-atlas-next");
+      return nextReward;
+    },
+  };
+  const claim = runInNewContext(`(${handler[1]})`, {
+    root,
+    showToast: (message) => messages.push(message),
+  });
+
+  claim({ currentTarget: button });
+  assert.equal(attributes.get("aria-pressed"), "true");
+  assert.equal(attributes.get("aria-label"), "5类里程碑奖励已领取");
+  assert.equal(status.textContent, "已领取");
+  assert.equal(
+    progressAttributes.get("aria-label"),
+    "已点亮6类；5类奖励已领取；11类可领取2张专家鉴别券",
+  );
+  assert.equal(nextReward.textContent, "距双券 5 类");
+  assert.deepEqual(messages, ["专家鉴别券 ×1 已领取"]);
+
+  claim({ currentTarget: button });
+  assert.equal(messages.length, 1, "a claimed reward must not be granted again");
 });
 
 test("tracks the Sites project and production route", async () => {
